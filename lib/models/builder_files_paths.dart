@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 
 class BuilderFilesLocalPaths {
-  BuilderFilesLocalPaths({
+  const BuilderFilesLocalPaths({
     required this.builderKey,
     required this.localPaths,
   });

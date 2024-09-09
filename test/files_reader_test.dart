@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:build_runner_optimizer/files_reader.dart';
+import 'package:build_runner_optimizer/project_files_reader.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -14,7 +14,8 @@ void main() {
               .normalizePath();
 
       // Act
-      final allTestFiles = FilesReader.getAllProjectFiles(testFilesPath.path);
+      final allTestFiles =
+          ProjectFilesReader.getAllProjectFiles(testFilesPath.path);
 
       // Assert
       expect(allTestFiles.length, filesCount);
@@ -28,7 +29,8 @@ void main() {
               .normalizePath();
 
       // Act
-      final allTestFiles = FilesReader.getAllProjectFiles(testFilesPath.path);
+      final allTestFiles =
+          ProjectFilesReader.getAllProjectFiles(testFilesPath.path);
 
       // Assert
       expect(allTestFiles.length, filesCount);

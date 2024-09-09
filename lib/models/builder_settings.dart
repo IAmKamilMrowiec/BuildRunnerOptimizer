@@ -2,6 +2,11 @@ import 'dart:io';
 
 import 'package:glob/glob.dart';
 import 'package:collection/collection.dart';
+import 'package:yaml/yaml.dart';
+
+const builderKeyYamlKey = 'builder_key';
+const fileContentFiltersYamlKey = 'content_filters';
+const filePathFiltersYamlKey = 'path_filters';
 
 class BuilderSettings {
   BuilderSettings._({
@@ -12,13 +17,30 @@ class BuilderSettings {
 
   factory BuilderSettings.fromRawStrings({
     required String builderKey,
-    required List<String> filePathFilters,
-    required List<String> fileContentFilters,
+    required Iterable<String> filePathFilters,
+    required Iterable<String> fileContentFilters,
   }) {
     return BuilderSettings._(
       builderKey: builderKey,
       fileContentFilters: fileContentFilters.map((e) => RegExp(e)).toList(),
       filePathFilters: filePathFilters.map((e) => Glob(e)).toList(),
+    );
+  }
+
+  factory BuilderSettings.fromYamlMap(YamlMap map) {
+    final builderKey = map[builderKeyYamlKey] as String;
+
+    final fileContentFilters =
+        (map[fileContentFiltersYamlKey] as YamlList? ?? [])
+            .map((e) => e as String);
+
+    final filePathFilters = (map[filePathFiltersYamlKey] as YamlList? ?? [])
+        .map((e) => e as String);
+
+    return BuilderSettings.fromRawStrings(
+      builderKey: builderKey,
+      fileContentFilters: fileContentFilters,
+      filePathFilters: filePathFilters,
     );
   }
 
@@ -66,4 +88,10 @@ class BuilderSettings {
   String toString() {
     return 'BuilderSettings(builderKey: $builderKey,filePathFilters: $filePathFilters,fileContentFilters: $fileContentFilters)';
   }
+}
+
+List<BuilderSettings> parseBuilderSettingsFromYamlList(YamlList list) {
+  return list
+      .map((element) => BuilderSettings.fromYamlMap((element as YamlMap)))
+      .toList();
 }

@@ -1,0 +1,5 @@
+build_runner_optimizer:
+  - builder_key: test:key
+    path_filters:
+      - lib/**
+      - test/**
