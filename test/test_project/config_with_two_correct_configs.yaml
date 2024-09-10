@@ -2,3 +2,11 @@ builders:
   - builder_key: test:key
     content_filters:
       - 'part ".*.g.dart";'
+    path_filters:
+      - "lib/**"
+      - test/**
+  - builder_key: secondKey
+    content_filters:
+      - "toJson()"
+    path_filters:
+      - "**/**dto.dart"

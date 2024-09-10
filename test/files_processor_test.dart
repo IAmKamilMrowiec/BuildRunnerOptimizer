@@ -14,7 +14,7 @@ void main() {
       setUpAll(
         () {
           testFilesPath =
-              Directory('${Directory.current.path}/test/test_project')
+              Directory('${Directory.current.path}/test/test_project/lib')
                   .uri
                   .normalizePath()
                   .path;
@@ -42,8 +42,8 @@ void main() {
               BuilderFilesLocalPaths(
                 builderKey: 'testKey',
                 localPaths: [
-                  'lib/nested_api/user_api.dart',
-                  'lib/user_api.dart',
+                  'nested_api/user_api.dart',
+                  'user_api.dart',
                 ],
               )
             ];
@@ -74,9 +74,9 @@ void main() {
           final expected = BuilderFilesLocalPaths(
             builderKey: 'testKey',
             localPaths: [
-              'lib/nested_serialized/nested_serialized_from.dart',
-              'lib/nested_serialized/nested_serialized_to.dart',
-              'lib/serialized.dart',
+              'nested_serialized/nested_serialized_from.dart',
+              'nested_serialized/nested_serialized_to.dart',
+              'serialized.dart',
             ],
           );
 
@@ -107,11 +107,11 @@ void main() {
           final expected = BuilderFilesLocalPaths(
             builderKey: 'testKey',
             localPaths: [
-              'lib/file_with_two_constructors.dart',
-              'lib/nested_serialized/nested_serialized_from.dart',
-              'lib/nested_serialized/nested_serialized_to.dart',
-              'lib/nested_with_two_constructors/file_with_two_constructors.dart',
-              'lib/serialized.dart',
+              'file_with_two_constructors.dart',
+              'nested_serialized/nested_serialized_from.dart',
+              'nested_serialized/nested_serialized_to.dart',
+              'nested_with_two_constructors/file_with_two_constructors.dart',
+              'serialized.dart',
             ],
           );
 
@@ -139,7 +139,7 @@ void main() {
           final expected = BuilderFilesLocalPaths(
             builderKey: 'testKey',
             localPaths: [
-              'lib/file_with_two_constructors.dart',
+              'file_with_two_constructors.dart',
             ],
           );
 
