@@ -7,11 +7,13 @@ class BuilderFilesLocalPaths {
   });
 
   final String builderKey;
-  // we need to use List instead of Set because we need to keep the order
+
+  // we need to use List instead of Set because we want to keep the order
   final List<String> localPaths;
 
   @override
-  int get hashCode => builderKey.hashCode ^ localPaths.hashCode;
+  int get hashCode =>
+      builderKey.hashCode ^ UnorderedIterableEquality().hash(localPaths);
 
   @override
   bool operator ==(Object other) =>

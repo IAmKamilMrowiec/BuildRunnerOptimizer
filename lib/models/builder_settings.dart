@@ -6,72 +6,68 @@ import 'package:yaml/yaml.dart';
 
 const builderKeyYamlKey = 'builder_key';
 const fileContentFiltersYamlKey = 'content_filters';
-const filePathFiltersYamlKey = 'path_filters';
+const filePathRawFiltersYamlKey = 'path_filters';
 
 class BuilderSettings {
-  BuilderSettings._({
+  BuilderSettings({
     required this.builderKey,
-    required this.filePathFilters,
-    required this.fileContentFilters,
+    required this.filePathRawFilters,
+    required this.fileContentRawFilters,
   });
-
-  factory BuilderSettings.fromRawStrings({
-    required String builderKey,
-    required Iterable<String> filePathFilters,
-    required Iterable<String> fileContentFilters,
-  }) {
-    return BuilderSettings._(
-      builderKey: builderKey,
-      fileContentFilters: fileContentFilters.map((e) => RegExp(e)).toList(),
-      filePathFilters: filePathFilters.map((e) => Glob(e)).toList(),
-    );
-  }
 
   factory BuilderSettings.fromYamlMap(YamlMap map) {
     final builderKey = map[builderKeyYamlKey] as String;
 
-    final fileContentFilters =
+    final fileContentRawFilters =
         (map[fileContentFiltersYamlKey] as YamlList? ?? [])
             .map((e) => e as String);
 
-    final filePathFilters = (map[filePathFiltersYamlKey] as YamlList? ?? [])
-        .map((e) => e as String);
+    final filePathRawFilters =
+        (map[filePathRawFiltersYamlKey] as YamlList? ?? [])
+            .map((e) => e as String);
 
-    return BuilderSettings.fromRawStrings(
+    return BuilderSettings(
       builderKey: builderKey,
-      fileContentFilters: fileContentFilters,
-      filePathFilters: filePathFilters,
+      fileContentRawFilters: fileContentRawFilters.toList(),
+      filePathRawFilters: filePathRawFilters.toList(),
     );
   }
 
   final String builderKey;
-  final List<Glob> filePathFilters;
-  final List<RegExp> fileContentFilters;
+  final List<String> filePathRawFilters;
+  final List<String> fileContentRawFilters;
 
   /// hasMatch by path or by file content
-  bool hasAnyMatch(File file, String fileContent) {
-    return _hasAnyPathMatch(file) || _hasAnyContentMatch(fileContent);
-  }
+  bool hasAnyMatch(File file, String fileContent) =>
+      _hasAnyPathMatch(file) || _hasAnyContentMatch(fileContent);
 
   /// has GLOB match by path
   bool _hasAnyPathMatch(File file) {
-    return filePathFilters == []
-        ? false
-        : filePathFilters.any((matcher) => matcher.matches(file.path));
+    for (var rawFilter in filePathRawFilters) {
+      final glob = Glob(rawFilter);
+      if (glob.matches(file.path)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /// has REGEX match by content
   bool _hasAnyContentMatch(String fileContent) {
-    return fileContentFilters == []
-        ? false
-        : fileContentFilters.any((matcher) => matcher.hasMatch(fileContent));
+    for (var rawFilter in fileContentRawFilters) {
+      final regExp = RegExp(rawFilter);
+      if (regExp.hasMatch(fileContent)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
   int get hashCode =>
       builderKey.hashCode ^
-      filePathFilters.hashCode ^
-      fileContentFilters.hashCode;
+      UnorderedIterableEquality().hash(filePathRawFilters) ^
+      UnorderedIterableEquality().hash(fileContentRawFilters);
 
   @override
   bool operator ==(Object other) =>
@@ -80,18 +76,12 @@ class BuilderSettings {
           runtimeType == other.runtimeType &&
           builderKey == other.builderKey &&
           UnorderedIterableEquality()
-              .equals(fileContentFilters, other.fileContentFilters) &&
+              .equals(fileContentRawFilters, other.fileContentRawFilters) &&
           UnorderedIterableEquality()
-              .equals(filePathFilters, other.filePathFilters);
+              .equals(filePathRawFilters, other.filePathRawFilters);
 
   @override
   String toString() {
-    return 'BuilderSettings(builderKey: $builderKey,filePathFilters: $filePathFilters,fileContentFilters: $fileContentFilters)';
+    return 'BuilderSettings(builderKey: $builderKey,filePathRawFilters: $filePathRawFilters,fileContentRawFilters: $fileContentRawFilters)';
   }
-}
-
-List<BuilderSettings> parseBuilderSettingsFromYamlList(YamlList list) {
-  return list
-      .map((element) => BuilderSettings.fromYamlMap((element as YamlMap)))
-      .toList();
 }

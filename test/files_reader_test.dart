@@ -1,21 +1,20 @@
 import 'dart:io';
 
-import 'package:build_runner_optimizer/project_files_reader.dart';
+import 'package:build_runner_optimizer/files_reader.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('FilesReader', () {
-    test('getAllProjectLibDartFiles', () {
+    test('getAllProjectFiles', () {
       // Arrange
       final filesCount = 8;
       final testFilesPath =
-          Directory('${Directory.current.path}/test/test_files/')
+          Directory('${Directory.current.path}/test/test_project/lib')
               .uri
               .normalizePath();
 
       // Act
-      final allTestFiles =
-          ProjectFilesReader.getAllProjectFiles(testFilesPath.path);
+      final allTestFiles = FilesReader.getAllProjectFiles(testFilesPath.path);
 
       // Assert
       expect(allTestFiles.length, filesCount);
@@ -23,14 +22,13 @@ void main() {
     test('getNestedApiFiles', () {
       // Arrange
       final filesCount = 2;
-      final testFilesPath =
-          Directory('${Directory.current.path}/test/test_files/lib/nested_api')
-              .uri
-              .normalizePath();
+      final testFilesPath = Directory(
+              '${Directory.current.path}/test/test_project/lib/nested_api')
+          .uri
+          .normalizePath();
 
       // Act
-      final allTestFiles =
-          ProjectFilesReader.getAllProjectFiles(testFilesPath.path);
+      final allTestFiles = FilesReader.getAllProjectFiles(testFilesPath.path);
 
       // Assert
       expect(allTestFiles.length, filesCount);

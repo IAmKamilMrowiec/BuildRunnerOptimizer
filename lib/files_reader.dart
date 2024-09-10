@@ -1,6 +1,6 @@
 import 'dart:io';
 
-class ConfigFilesReader {
+class FilesReader {
   static Set<File> getAllProjectFiles(String filesPath) {
     final allFiles = Directory(filesPath)
         .listSync(recursive: true, followLinks: false)

@@ -13,22 +13,23 @@ void main() {
 
       setUpAll(
         () {
-          testFilesPath = Directory('${Directory.current.path}/test/test_files')
-              .uri
-              .normalizePath()
-              .path;
+          testFilesPath =
+              Directory('${Directory.current.path}/test/test_project')
+                  .uri
+                  .normalizePath()
+                  .path;
         },
       );
       group('single builder', () {
         group(('path filters'), () {
           test('nested and root', () {
             // Arrange
-            final builderSettings = BuilderSettings.fromRawStrings(
+            final builderSettings = BuilderSettings(
               builderKey: 'testKey',
-              filePathFilters: [
+              filePathRawFilters: [
                 '**_api.dart',
               ],
-              fileContentFilters: [],
+              fileContentRawFilters: [],
             );
 
             // Act
@@ -55,10 +56,10 @@ void main() {
       group('content filters', () {
         test('gets all files', () {
           // Arrange
-          final builderSettings = BuilderSettings.fromRawStrings(
+          final builderSettings = BuilderSettings(
             builderKey: 'testKey',
-            filePathFilters: [],
-            fileContentFilters: [
+            filePathRawFilters: [],
+            fileContentRawFilters: [
               r'toJson()',
               r'fromJson()',
             ],
@@ -86,13 +87,13 @@ void main() {
       group('content and path filters', () {
         test('gets all files', () {
           // Arrange
-          final builderSettings = BuilderSettings.fromRawStrings(
+          final builderSettings = BuilderSettings(
             builderKey: 'testKey',
-            filePathFilters: [
+            filePathRawFilters: [
               '**/**_serialized**',
               '**/lib/serialized**',
             ],
-            fileContentFilters: [
+            fileContentRawFilters: [
               r'@freezed()',
             ],
           );
@@ -119,12 +120,12 @@ void main() {
         });
         test('do not duplicate entries', () {
           // Arrange
-          final builderSettings = BuilderSettings.fromRawStrings(
+          final builderSettings = BuilderSettings(
             builderKey: 'testKey',
-            filePathFilters: [
+            filePathRawFilters: [
               '**/lib/file_with_two_constructors**',
             ],
-            fileContentFilters: [
+            fileContentRawFilters: [
               r'class RootUser',
             ],
           );

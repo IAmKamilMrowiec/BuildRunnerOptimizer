@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:build_runner_optimizer/project_files_reader.dart';
+import 'package:build_runner_optimizer/files_reader.dart';
 import 'package:build_runner_optimizer/models/builder_files_paths.dart';
 import 'package:build_runner_optimizer/models/builder_settings.dart';
 import 'package:collection/collection.dart';
@@ -12,7 +12,7 @@ class FilesProcessor {
   }) {
     final filesPerBuilder = <String, List<File>>{};
 
-    final allFiles = ProjectFilesReader.getAllProjectFiles(
+    final allFiles = FilesReader.getAllProjectFiles(
       projectRootPath,
     );
 
@@ -26,7 +26,7 @@ class FilesProcessor {
 
       for (final builderSetting in buildersWithMatches) {
         filesPerBuilder[builderSetting.builderKey] = [
-          //it may be null so we need to use the null-aware operator
+          // it may be null so we need to use the null-aware operator
           ...filesPerBuilder[builderSetting.builderKey] ?? [],
           file,
         ];
